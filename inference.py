@@ -521,7 +521,7 @@ class JointParticleFilter(ParticleFilter):
         	self.particles.append(distro.sample())
         #raiseNotDefined()
 
-    def elapseTime(self, gameState):
+def elapseTime(self, gameState):
         """
         Sample each particle's next state based on its current state and the
         gameState.
