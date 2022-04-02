@@ -378,21 +378,21 @@ class ParticleFilter(InferenceModule):
         pacmanPosition = gameState.getPacmanPosition()
         jailPosition = self.getJailPosition()
         
-        beliefs = self.getBeliefDistribution()
+        weights = self.getBeliefDistribution()
 
         for ghostPosition in self.allPositions:
             #P(noisyDistance | pacmanPosition, ghostPosition, jailPosition) = P(reading | ghost)
             prob = self.getObservationProb(observation, pacmanPosition, ghostPosition, jailPosition)
             #P(ghost | reading) = P(reading | ghost) * P(ghost)
-            beliefs[ghostPosition] *= prob
+            weights[ghostPosition] *= prob
 
-        beliefs.normalize()
+        weights.normalize()
         
-        if beliefs.total() == 0: self.initializeUniformly(gameState)
+        if weights.total() == 0: self.initializeUniformly(gameState)
         else:
             self.particles = []
             for resample in range(self.numParticles):
-                self.particles.append(beliefs.sample())
+                self.particles.append(weights.sample())
 
     def elapseTime(self, gameState):
         """
@@ -400,7 +400,13 @@ class ParticleFilter(InferenceModule):
         gameState.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        newParticles = []
+
+        for oldPos in self.particles:
+            newPosDist = self.getPositionDistribution(gameState, oldPos)
+            newParticles.append(newPosDist.sample())
+
+        self.particles = newParticles
 
     def getBeliefDistribution(self):
         """
