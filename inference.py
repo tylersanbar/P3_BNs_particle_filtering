@@ -506,7 +506,7 @@ class JointParticleFilter(ParticleFilter):
                     pList = list(p)
                     pList[x] = jailPosition
                     pList = tuple(pList)
-                    prob = 0
+                    prob = 0 
            		
             distro[p] += prob
 
