@@ -78,9 +78,7 @@ class DiscreteDistribution(dict):
         """
 
         "*** YOUR CODE HERE ***"
-        sum = 0
-        for v in self.values():
-            sum += v
+        sum = self.total()
         if sum == 0: return
         for k, v in self.items():
             self[k] = v/sum
@@ -185,9 +183,8 @@ class InferenceModule:
             if noisyDistance is None: return 1
             else: return 0
         if noisyDistance is None: 
-            if ghostPosition is not jailPosition: return 0
-            else: return 1
-        
+            return 0
+                    
         trueDistance = manhattanDistance(pacmanPosition, ghostPosition)
         #Returns P(noisyDistance | trueDistance)
         pNoisy = busters.getObservationProbability(noisyDistance, trueDistance)
@@ -357,9 +354,13 @@ class ParticleFilter(InferenceModule):
         distributed across positions in order to ensure a uniform prior. Use
         self.particles for the list of particles.
         """
-        self.particles = []
+
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        self.particles = []
+        numLegal = len(self.legalPositions)
+        particlesPerPosition = int(self.numParticles/numLegal)
+        for position in range(numLegal):
+                self.particles += [self.legalPositions[position]] * particlesPerPosition
 
     def observeUpdate(self, observation, gameState):
         """
@@ -393,7 +394,13 @@ class ParticleFilter(InferenceModule):
         This function should return a normalized distribution.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        beliefs = DiscreteDistribution()
+        for p in self.legalPositions:
+            beliefs[p] = 0
+        for position in self.particles:
+            beliefs[position] += 1
+        beliefs.normalize()
+        return beliefs
 
 
 class JointParticleFilter(ParticleFilter):
