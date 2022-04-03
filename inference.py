@@ -187,7 +187,6 @@ class InferenceModule:
         #Returns P(noisyDistance | trueDistance)
         pNoisy = busters.getObservationProbability(noisyDistance, trueDistance)
         return pNoisy
-        raiseNotDefined()
 
     def setGhostPosition(self, gameState, ghostPosition, index):
         """
@@ -365,9 +364,8 @@ class ParticleFilter(InferenceModule):
         "*** YOUR CODE HERE ***"
         self.particles = []
         numLegal = len(self.legalPositions)
-        particlesPerPosition = int(self.numParticles/numLegal)
-        for position in range(numLegal):
-                self.particles += [self.legalPositions[position]] * particlesPerPosition
+        for particle in range(self.numParticles):
+                self.particles.append(self.legalPositions[particle % numLegal])
 
     def observeUpdate(self, observation, gameState):
         """
@@ -388,9 +386,7 @@ class ParticleFilter(InferenceModule):
         weights = self.getBeliefDistribution()
 
         for ghostPosition in self.allPositions:
-            #P(noisyDistance | pacmanPosition, ghostPosition, jailPosition) = P(reading | ghost)
             prob = self.getObservationProb(observation, pacmanPosition, ghostPosition, jailPosition)
-            #P(ghost | reading) = P(reading | ghost) * P(ghost)
             weights[ghostPosition] *= prob
 
         weights.normalize()
