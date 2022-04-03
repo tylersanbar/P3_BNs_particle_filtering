@@ -1,0 +1,14 @@
+﻿Supplement File for Project 3
+Peyton Richardson, Tyler Sanbar
+Question 3-1:
+Test 1: no shading difference
+Test 2: top few 3 rows change shading getting darker
+Test 3: top 6 rows change shading getting darker
+Test 4: The spaces close to the walls of the big square get darker and the deepest most corners at the ends of the long path with branches get darker
+
+
+As time passes the probability of the ghost being in certain squares changes based on the number of actions that can lead to that square which is determined by the geometry of the maze. The squares that get darker have less probability of containing the ghost so have less actions which lead there, the lighter a square the higher probability the ghost is there and so more actions lead here. Test 2 and 3 are go south agents so the top section gets darker as time passes. 
+
+
+Question 10-1:
+Test 1 doesn’t look at the ghost’s position observations, so it slowly moves its predictions towards the sides regardless of the positions of the ghosts, while test 3 quickly finds where the ghosts are most likely to be, and has stronger predictions centralized on a few tiles around the ghosts.
