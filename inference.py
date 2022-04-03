@@ -179,12 +179,10 @@ class InferenceModule:
         Return the probability P(noisyDistance | pacmanPosition, ghostPosition).
         """
         "*** YOUR CODE HERE ***"
-        if ghostPosition is jailPosition:
-            if noisyDistance is None: return 1
+        if ghostPosition == jailPosition or noisyDistance is None:
+            if noisyDistance is None and ghostPosition == jailPosition: return 1
             else: return 0
-        if noisyDistance is None: 
-            return 0
-                    
+                
         trueDistance = manhattanDistance(pacmanPosition, ghostPosition)
         #Returns P(noisyDistance | trueDistance)
         pNoisy = busters.getObservationProbability(noisyDistance, trueDistance)
@@ -318,7 +316,15 @@ class ExactInference(InferenceModule):
         Pacman's current position. However, this is not a problem, as Pacman's
         current position is known.
         """
-        "*** YOUR CODE HERE ***"
+        "*** YOUR CODE HERE ***" 
+        """
+        distro = DiscreteDistribution()
+        for oldPos in self.allPositions:
+            newPosDist = self.getPositionDistribution(gameState,oldPos)
+            for newPos, prob in newPosDist.items():
+                distro[newPos] += self.beliefs[oldPos] * prob
+        self.beliefs = distro
+        """
         newBeliefs = DiscreteDistribution()
         for p in self.legalPositions:
             newBeliefs[p] = 0
@@ -329,6 +335,7 @@ class ExactInference(InferenceModule):
                 prob = newPosDist[newPos]
                 newBeliefs[newPos] += self.beliefs[oldPos] * prob
         self.beliefs = newBeliefs
+        
         
 
     def getBeliefDistribution(self):
@@ -525,7 +532,7 @@ class JointParticleFilter(ParticleFilter):
     def elapseTime(self, gameState):
         """
         Sample each particle's next state based on its current state and the
-        gameState. 
+        gameState.
         """
         newParticles = []
         for oldParticle in self.particles:
