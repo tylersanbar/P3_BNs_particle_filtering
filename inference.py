@@ -504,19 +504,23 @@ class JointParticleFilter(ParticleFilter):
         pacmanPosition = gameState.getPacmanPosition()
         distro = DiscreteDistribution()
         
+        # check each particle, initalizing prob to 1 for later muliplication
         for p in self.particles:
             prob = 1
 
+            # Set probablity appropriately if the ghost has a noisy distance
             for x in range(self.numGhosts):
                 jailPosition = self.getJailPosition(x)	
                 if observation[x] is not None:
                     prob *= self.getObservationProb(observation[x], pacmanPosition, p[x], jailPosition)
                 else:
+                    # If the observation is empty add the jail position to the list and set prob to 0
                     pList = list(p)
                     pList[x] = jailPosition
                     pList = tuple(pList)
                     prob = 0 
-                
+
+            # Increment distro at particle p by prob    
             distro[p] += prob
 
         distro.normalize()
@@ -528,8 +532,7 @@ class JointParticleFilter(ParticleFilter):
         self.particles = []
         for x in range(self.numParticles):
             self.particles.append(distro.sample())
-        #raiseNotDefined()
-    
+                
     def elapseTime(self, gameState):
         """
         Sample each particle's next state based on its current state and the
