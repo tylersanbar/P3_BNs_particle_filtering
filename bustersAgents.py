@@ -149,6 +149,7 @@ class GreedyBustersAgent(BustersAgent):
         "*** YOUR CODE HERE ***"
         closestGhostPosition = None
         closestDistance = inf
+        ##Get closest Ghost position from max of probability distribution
         for ghost in range(len(livingGhostPositionDistributions)):
             distribution = livingGhostPositionDistributions[ghost]
             mostLikelyPosition = max(distribution, key=distribution.get)
@@ -156,7 +157,7 @@ class GreedyBustersAgent(BustersAgent):
             if distance < closestDistance:
                 closestGhostPosition = mostLikelyPosition
                 closestDistance = distance
-        
+        ##Get action that leads to the closest successor state to the found closest ghost position
         closestAction = None
         closestDistance = inf
         for action in legal:
