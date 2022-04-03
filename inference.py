@@ -362,6 +362,7 @@ class ParticleFilter(InferenceModule):
         """
 
         "*** YOUR CODE HERE ***"
+        ##Assign legal positions to particles
         self.particles = []
         numLegal = len(self.legalPositions)
         for particle in range(self.numParticles):
@@ -384,7 +385,7 @@ class ParticleFilter(InferenceModule):
         jailPosition = self.getJailPosition()
         
         weights = self.getBeliefDistribution()
-
+        #Update weights for all positions based on observation
         for ghostPosition in self.allPositions:
             prob = self.getObservationProb(observation, pacmanPosition, ghostPosition, jailPosition)
             weights[ghostPosition] *= prob
@@ -392,6 +393,7 @@ class ParticleFilter(InferenceModule):
         weights.normalize()
         
         if weights.total() == 0: self.initializeUniformly(gameState)
+        #Resample particles based on updated weights
         else:
             self.particles = []
             for resample in range(self.numParticles):
@@ -424,6 +426,7 @@ class ParticleFilter(InferenceModule):
         beliefs = DiscreteDistribution()
         for p in self.legalPositions:
             beliefs[p] = 0
+        #Beliefs are proportional to number of particles
         for position in self.particles:
             beliefs[position] += 1
         beliefs.normalize()
@@ -458,9 +461,11 @@ class JointParticleFilter(ParticleFilter):
         numLegal = len(self.legalPositions)
         positions = []
         for position in range(numLegal): positions.append(self.legalPositions[position])
+        #Create cartesian product tuples of all ghost positions
         positionTuples = list(itertools.product(positions, repeat =self.numGhosts))
         numTuples = len(positionTuples)
         random.shuffle(positionTuples)
+        #Assign particles uniformly
         for particle in range(self.numParticles):
                 self.particles.append(positionTuples[particle % numTuples])
 
@@ -501,7 +506,7 @@ class JointParticleFilter(ParticleFilter):
         
         for p in self.particles:
             prob = 1
-            
+
             for x in range(self.numGhosts):
                 jailPosition = self.getJailPosition(x)	
                 if observation[x] is not None:
