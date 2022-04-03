@@ -525,7 +525,7 @@ class JointParticleFilter(ParticleFilter):
     def elapseTime(self, gameState):
         """
         Sample each particle's next state based on its current state and the
-        gameState.
+        gameState. 
         """
         newParticles = []
         for oldParticle in self.particles:
