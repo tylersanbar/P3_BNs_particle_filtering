@@ -400,6 +400,7 @@ class ParticleFilter(InferenceModule):
         gameState.
         """
         "*** YOUR CODE HERE ***"
+        
         newParticles = []
 
         for oldPos in self.particles:
@@ -507,7 +508,7 @@ class JointParticleFilter(ParticleFilter):
                     pList[x] = jailPosition
                     pList = tuple(pList)
                     prob = 0 
-           		
+                
             distro[p] += prob
 
         distro.normalize()
@@ -515,13 +516,13 @@ class JointParticleFilter(ParticleFilter):
         if distro.total() == 0:
             self.initializeUniformly(gameState)
             distro = self.getBeliefDistribution()
-        	
+            
         self.particles = []
         for x in range(self.numParticles):
-        	self.particles.append(distro.sample())
+            self.particles.append(distro.sample())
         #raiseNotDefined()
-
-def elapseTime(self, gameState):
+    
+    def elapseTime(self, gameState):
         """
         Sample each particle's next state based on its current state and the
         gameState.
@@ -532,8 +533,10 @@ def elapseTime(self, gameState):
 
             # now loop through and update each entry in newParticle...
             "*** YOUR CODE HERE ***"
-            raiseNotDefined()
-
+            for x in range(self.numGhosts):
+                newPosDist = self.getPositionDistribution(gameState, oldParticle, x, self.ghostAgents[x])
+                newPosition = newPosDist.sample()
+                newParticle[x] = newPosition
             """*** END YOUR CODE HERE ***"""
             newParticles.append(tuple(newParticle))
         self.particles = newParticles
